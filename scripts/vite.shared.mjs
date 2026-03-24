@@ -78,6 +78,7 @@ function sharedConfig(mode) {
 export function createRendererConfig({ mode = 'development' } = {}) {
   return {
     ...sharedConfig(mode),
+    base: mode === 'production' ? './' : '/',
     publicDir: path.resolve(rootDir, 'public'),
     plugins: [vue(), tailwindcss()],
     define: {

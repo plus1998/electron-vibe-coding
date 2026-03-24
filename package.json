@@ -2,13 +2,26 @@
   "name": "electron-vibe-coding",
   "private": true,
   "version": "0.1.0",
-  "description": "Commercial-grade Electron starter powered by Vite 8, Vue 3, shadcn-vue and a high-discipline AI coding workflow.",
+  "description": "Commercial-grade Electron starter powered by Vite 8, Vue 3, shadcn-vue and a skills-driven AI coding workflow.",
+  "author": {
+    "name": "plus",
+    "email": "plus.1998@qq.com"
+  },
+  "license": "MIT",
   "type": "module",
   "main": "dist/main/index.js",
   "packageManager": "pnpm@10.15.0",
   "scripts": {
+    "assets:icons": "node scripts/icons.mjs",
+    "clean:release": "node scripts/clean-release.mjs",
     "dev": "node scripts/dev.mjs",
     "build": "pnpm run typecheck && node scripts/build.mjs",
+    "package:dir": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --dir --publish never",
+    "dist": "pnpm run dist:all",
+    "dist:all": "node scripts/dist-all.mjs",
+    "dist:mac": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --mac dmg --publish never",
+    "dist:win": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --win nsis --x64 --publish never",
+    "dist:linux": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --linux deb --x64 --publish never",
     "lint": "eslint .",
     "preview": "vite preview --host 127.0.0.1 --strictPort",
     "start": "electron dist/main/index.js",
@@ -29,6 +42,7 @@
     "@vitejs/plugin-vue": "^6.0.5",
     "@vue/tsconfig": "^0.9.0",
     "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
     "eslint": "^10.1.0",
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
@@ -39,5 +53,69 @@
     "typescript-eslint": "^8.57.2",
     "vite": "^8.0.2",
     "vue-tsc": "^3.2.6"
+  },
+  "build": {
+    "appId": "com.plus.electronvibecoding",
+    "productName": "Electron Vibe Coding",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "buildResources": "build",
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json",
+      "!**/*.map",
+      "!node_modules/.cache/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "identity": null,
+      "icon": "build/icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-setup-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    },
+    "linux": {
+      "category": "Development",
+      "icon": "build/icon.png",
+      "maintainer": "plus <team@plus.local>",
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    }
   }
 }

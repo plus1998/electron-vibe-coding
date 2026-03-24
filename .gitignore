@@ -10,7 +10,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+release
 *.local
+
+build/icon.ico
+build/icon.icns
+build/icon.png
+build/icons.iconset
 
 # Editor directories and files
 .vscode/*

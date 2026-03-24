@@ -45,6 +45,14 @@ function createWindow() {
     }
   })
 
+  window.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedUrl) => {
+    console.error('[main] renderer failed to load', {
+      errorCode,
+      errorDescription,
+      validatedUrl,
+    })
+  })
+
   window.webContents.setWindowOpenHandler(({ url }) => {
     void shell.openExternal(url)
     return { action: 'deny' }

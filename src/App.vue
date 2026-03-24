@@ -28,9 +28,9 @@ const executiveStats = [
     detail: '以前沿能力驱动桌面工程基座。',
   },
   {
-    value: 'Strong Rules',
-    label: 'AI coding discipline',
-    detail: '更强规范，更少漂移，更稳协作。',
+    value: 'Skills System',
+    label: 'AI coding governance',
+    detail: '以高质量 skills 体系约束 AI 输出边界与交付一致性。',
   },
   {
     value: 'High Availability',
@@ -43,7 +43,7 @@ const trustSignals = [
   'Vue 3 + TypeScript',
   'Tailwind CSS v4 + shadcn-vue',
   'Electron 41 multi-process boundary',
-  'Lint + typecheck + unified scripts',
+  'Lint + typecheck + skills-driven workflow',
 ]
 
 const featureColumns = [
@@ -54,7 +54,7 @@ const featureColumns = [
   },
   {
     title: 'AI 编程强规范',
-    body: '通过清晰分层、严格类型、统一脚本与一致化组件约束，让 AI 生成代码更可控、更易审阅。',
+    body: '通过清晰分层、严格类型、统一脚本与成体系 skills 约束，让 AI 生成代码更可控、更易审阅、更接近生产标准。',
     icon: ShieldCheck,
   },
   {
@@ -68,7 +68,7 @@ const workflowStages = [
   {
     step: '01',
     title: 'Define the contract',
-    body: '先固定进程边界、组件层级与工程规则，让 AI 在清晰约束里工作。',
+    body: '先固定进程边界、组件层级、skills 规范与工程规则，让 AI 在明确契约中稳定工作。',
   },
   {
     step: '02',
@@ -89,7 +89,7 @@ const commandDeck = [
   },
   {
     name: 'pnpm lint',
-    detail: '执行工程规范检查，约束 AI 编程输出与团队协作质量。',
+    detail: '执行工程规范检查，和 skills 体系一起约束 AI 编程输出与团队协作质量。',
   },
   {
     name: 'pnpm build',
@@ -157,18 +157,19 @@ function handleRefresh() {
           <div class="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top_left,rgba(95,93,255,0.32),transparent_42%),radial-gradient(circle_at_70%_18%,rgba(63,186,199,0.22),transparent_30%)]" />
           <div class="relative flex h-full flex-col gap-8 p-6 sm:p-8 lg:p-10">
             <div class="flex flex-wrap gap-2">
-              <Badge>Enterprise desktop foundation</Badge>
+              <Badge>Enterprise AI desktop foundation</Badge>
               <Badge variant="outline">{{ isElectron ? 'Runtime verified in Electron' : 'Browser preview mode' }}</Badge>
             </div>
 
             <div class="space-y-5">
-              <p class="text-sm uppercase tracking-[0.32em] text-muted-foreground">AI-native Engineering System</p>
+              <p class="text-sm uppercase tracking-[0.32em] text-muted-foreground">AI-native Delivery Infrastructure</p>
               <h2 class="max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-balance sm:text-5xl lg:text-6xl">
-                为商业级桌面产品打造的高端工程模板，用 Vite 8 驱动更高效、更稳定、更高可用的 AI 编程交付。
+                为商业级桌面产品打造的高端工程模板，以 Vite 8 与成体系 skills 为核心，驱动更高效、更稳定、更高可用的 AI 编程交付。
               </h2>
               <p class="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
                 这不是传统脚手架的堆砌，而是一套围绕前沿技术、强规范协作与长期可维护性交付重新设计的工程底座。
-                它把 renderer、main 与 preload 收敛进更清晰的控制面，帮助团队在 AI 编程时代仍然保持高质量输出。
+                它把 renderer、main 与 preload 收敛进更清晰的控制面，并通过大量优秀且规范的 skills 沉淀可复用工程经验，
+                帮助团队在 AI 编程时代仍然保持高质量输出与稳定节奏。
               </p>
             </div>
 
@@ -231,8 +232,8 @@ function handleRefresh() {
               <div class="grid gap-3 sm:grid-cols-2">
                 <div class="rounded-[24px] border border-border/60 bg-background/80 p-4">
                   <p class="text-xs uppercase tracking-[0.18em] text-muted-foreground">Governance</p>
-                  <p class="mt-2 text-lg font-semibold">Strong rules</p>
-                  <p class="mt-2 text-sm leading-6 text-muted-foreground">类型、lint、脚本入口和组件模式保持一致。</p>
+                  <p class="mt-2 text-lg font-semibold">Skills + rules</p>
+                  <p class="mt-2 text-sm leading-6 text-muted-foreground">类型、lint、脚本入口、组件模式与 skills 规范保持一致。</p>
                 </div>
                 <div class="rounded-[24px] border border-border/60 bg-background/80 p-4">
                   <p class="text-xs uppercase tracking-[0.18em] text-muted-foreground">Delivery</p>
@@ -273,7 +274,7 @@ function handleRefresh() {
           <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div class="max-w-2xl">
               <p class="text-sm uppercase tracking-[0.22em] text-muted-foreground">Why leading teams choose this</p>
-              <h3 class="mt-2 text-2xl font-semibold">以前沿技术和工程纪律，支撑更像产品而不是 demo 的桌面交付。</h3>
+              <h3 class="mt-2 text-2xl font-semibold">以前沿技术、统一规则和 skills 资产，支撑更像产品而不是 demo 的桌面交付。</h3>
             </div>
             <div class="flex flex-wrap gap-2">
               <Badge v-for="signal in trustSignals" :key="signal" variant="outline">{{ signal }}</Badge>
@@ -288,7 +289,7 @@ function handleRefresh() {
             </span>
             <div>
               <p class="text-sm uppercase tracking-[0.22em] text-muted-foreground">Positioning</p>
-              <h3 class="mt-2 text-2xl font-semibold">不是“能跑就行”的模板，而是“可交付、可治理、可持续”的 AI 桌面工程系统。</h3>
+              <h3 class="mt-2 text-2xl font-semibold">不是“能跑就行”的模板，而是“可交付、可治理、可复用”的 AI 桌面工程系统。</h3>
             </div>
           </div>
         </Card>
@@ -316,7 +317,7 @@ function handleRefresh() {
             </span>
             <div>
               <p class="text-sm uppercase tracking-[0.22em] text-muted-foreground">AI Coding System</p>
-              <h3 class="text-2xl font-semibold">高质量 AI 编程不是更自由，而是更有边界。</h3>
+              <h3 class="text-2xl font-semibold">高质量 AI 编程，不只是更快，而是把优秀经验沉淀为可复用的 skills 体系。</h3>
             </div>
           </div>
 
