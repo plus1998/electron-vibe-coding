@@ -96,7 +96,8 @@ pnpm start
 - `pnpm dev` 会同时启动 Vite renderer、main/preload watch，并自动拉起 Electron。
 - `pnpm build` 会输出 `dist/renderer`、`dist/main`、`dist/preload`。
 - `pnpm run clean:release` 会清理旧的安装包与 unpacked 目录，避免历史产物干扰验证。
-- `pnpm dist` / `pnpm run dist:all` 会依次生成 `dmg`、`exe (nsis)`、`deb` 三类安装包。
+- `pnpm dist` 会按当前宿主平台选择对应打包目标：macOS 对应 `pnpm dist:mac`，Windows 对应 `pnpm dist:win`，Linux 对应 `pnpm dist:linux`。
+- `pnpm run dist:all` 会依次尝试生成 `dmg`、`exe (nsis)`、`deb` 三类安装包。
 - `pnpm run package:dir` 会生成未封装目录，适合快速验证打包后的应用结构。
 - `pnpm dist:mac` 目标为 `dmg`，`pnpm dist:win` 目标为 `exe (nsis, x64)`，`pnpm dist:linux` 目标为 `deb (x64)`。
 - 图标资源会在打包前由 `pnpm run assets:icons` 自动生成到 `build/`，默认优先读取项目根目录的 `logo.png`。

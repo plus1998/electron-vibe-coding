@@ -17,7 +17,7 @@
     "dev": "node scripts/dev.mjs",
     "build": "pnpm run typecheck && node scripts/build.mjs",
     "package:dir": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --dir --publish never",
-    "dist": "pnpm run dist:all",
+    "dist": "node scripts/dist-current.mjs",
     "dist:all": "node scripts/dist-all.mjs",
     "dist:mac": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --mac dmg --publish never",
     "dist:win": "pnpm run clean:release && pnpm run build && pnpm run assets:icons && electron-builder --win nsis --x64 --publish never",

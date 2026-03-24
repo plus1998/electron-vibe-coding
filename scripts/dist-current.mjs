@@ -17,9 +17,17 @@ function run(command, args) {
   }
 }
 
-run(pnpmCmd, ['run', 'clean:release'])
-run(pnpmCmd, ['run', 'build'])
-run(pnpmCmd, ['run', 'assets:icons'])
-run(pnpmCmd, ['exec', 'electron-builder', '--mac', 'dmg', '--publish', 'never'])
-run(pnpmCmd, ['exec', 'electron-builder', '--linux', 'deb', '--x64', '--publish', 'never'])
-run(pnpmCmd, ['exec', 'electron-builder', '--win', 'nsis', '--x64', '--publish', 'never'])
+function getPlatformDistArgs() {
+  switch (process.platform) {
+    case 'darwin':
+      return ['run', 'dist:mac']
+    case 'win32':
+      return ['run', 'dist:win']
+    case 'linux':
+      return ['run', 'dist:linux']
+    default:
+      throw new Error(`[dist] unsupported platform: ${process.platform}`)
+  }
+}
+
+run(pnpmCmd, getPlatformDistArgs())
