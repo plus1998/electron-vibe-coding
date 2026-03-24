@@ -9,6 +9,26 @@ const rendererHtml = path.resolve(currentDir, '../renderer/index.html')
 const preloadFile = path.resolve(currentDir, '../preload/index.cjs')
 const devServerUrl = process.env.VITE_DEV_SERVER_URL
 const isMac = process.platform === 'darwin'
+const allowedExternalProtocols = new Set(['https:', 'mailto:'])
+
+function isAllowedExternalUrl(targetUrl: string) {
+  try {
+    const parsedUrl = new URL(targetUrl)
+
+    return allowedExternalProtocols.has(parsedUrl.protocol)
+  } catch {
+    return false
+  }
+}
+
+async function openAllowedExternalUrl(targetUrl: string) {
+  if (!isAllowedExternalUrl(targetUrl)) {
+    return false
+  }
+
+  await shell.openExternal(targetUrl)
+  return true
+}
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -53,8 +73,19 @@ function createWindow() {
     })
   })
 
+  window.webContents.on('will-navigate', (event, targetUrl) => {
+    const currentUrl = window.webContents.getURL()
+
+    if (targetUrl === currentUrl) {
+      return
+    }
+
+    event.preventDefault()
+    void openAllowedExternalUrl(targetUrl)
+  })
+
   window.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url)
+    void openAllowedExternalUrl(url)
     return { action: 'deny' }
   })
 
@@ -88,8 +119,7 @@ ipcMain.handle('app:ping', () => ({
 }))
 
 ipcMain.handle('shell:openExternal', async (_event, url: string) => {
-  await shell.openExternal(url)
-  return true
+  return openAllowedExternalUrl(url)
 })
 
 ipcMain.handle('window:state', (event) => {
