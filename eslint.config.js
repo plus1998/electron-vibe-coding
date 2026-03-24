@@ -22,7 +22,11 @@ export default [
       },
     },
     rules: {
+      'comma-dangle': ['error', 'always-multiline'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'object-curly-spacing': ['error', 'always'],
+      quotes: ['error', 'single', { allowTemplateLiterals: true, avoidEscape: true }],
+      semi: ['error', 'never'],
     },
   },
   {
