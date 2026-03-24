@@ -7,10 +7,22 @@ const fallbackWindowState: WindowState = {
   isMaximized: false,
 }
 
+function formatDesktopError(error: unknown) {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return 'Unknown desktop runtime error'
+}
+
 export function useDesktopRuntime() {
   const appInfo = ref<AppInfo | null>(null)
   const ping = ref<PingResult | null>(null)
   const windowState = ref<WindowState>(fallbackWindowState)
+  const runtimeError = ref<string | null>(null)
+  const pingError = ref<string | null>(null)
+  const isRefreshing = ref(false)
+  const isPinging = ref(false)
   const isElectron = computed(() => Boolean(window.desktop))
   const bridgeLabel = computed(() => (isElectron.value ? 'Electron bridge ready' : 'Browser preview fallback'))
 
@@ -18,11 +30,28 @@ export function useDesktopRuntime() {
     if (!window.desktop) {
       appInfo.value = null
       windowState.value = fallbackWindowState
+      runtimeError.value = null
       return
     }
 
-    appInfo.value = await window.desktop.getAppInfo()
-    windowState.value = await window.desktop.getWindowState()
+    isRefreshing.value = true
+
+    try {
+      const [nextAppInfo, nextWindowState] = await Promise.all([
+        window.desktop.getAppInfo(),
+        window.desktop.getWindowState(),
+      ])
+
+      appInfo.value = nextAppInfo
+      windowState.value = nextWindowState
+      runtimeError.value = null
+    } catch (error) {
+      appInfo.value = null
+      windowState.value = fallbackWindowState
+      runtimeError.value = formatDesktopError(error)
+    } finally {
+      isRefreshing.value = false
+    }
   }
 
   async function pingMain() {
@@ -32,15 +61,26 @@ export function useDesktopRuntime() {
         message: 'preview',
         time: new Date().toISOString(),
       }
+      pingError.value = null
       return
     }
 
-    const startedAt = performance.now()
-    const payload = await window.desktop.ping()
+    isPinging.value = true
 
-    ping.value = {
-      ...payload,
-      latency: Math.round(performance.now() - startedAt),
+    try {
+      const startedAt = performance.now()
+      const payload = await window.desktop.ping()
+
+      ping.value = {
+        ...payload,
+        latency: Math.round(performance.now() - startedAt),
+      }
+      pingError.value = null
+    } catch (error) {
+      ping.value = null
+      pingError.value = formatDesktopError(error)
+    } finally {
+      isPinging.value = false
     }
   }
 
@@ -61,11 +101,15 @@ export function useDesktopRuntime() {
   return {
     appInfo,
     bridgeLabel,
+    isPinging,
+    isRefreshing,
     isElectron,
     openExternal,
     ping,
+    pingError,
     pingMain,
     refreshAppInfo,
+    runtimeError,
     windowState,
   }
 }

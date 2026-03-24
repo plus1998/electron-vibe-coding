@@ -17,8 +17,20 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useDesktopRuntime } from '@/composables/use-desktop-runtime'
 
-const { appInfo, bridgeLabel, isElectron, openExternal, ping, pingMain, refreshAppInfo, windowState } =
-  useDesktopRuntime()
+const {
+  appInfo,
+  bridgeLabel,
+  isElectron,
+  isPinging,
+  isRefreshing,
+  openExternal,
+  ping,
+  pingError,
+  pingMain,
+  refreshAppInfo,
+  runtimeError,
+  windowState,
+} = useDesktopRuntime()
 const appMeta = __APP_META__
 
 const executiveStats = [
@@ -112,6 +124,34 @@ const runtimeRows = computed(() => [
   ['Platform', appInfo.value ? `${appInfo.value.platform} / ${appInfo.value.arch}` : 'Browser preview'],
   ['Window', windowState.value.isMaximized ? 'Maximized' : 'Normal'],
 ])
+
+const pingSummary = computed(() => {
+  if (pingError.value) {
+    return 'Unavailable'
+  }
+
+  if (ping.value) {
+    return `${ping.value.message} · ${ping.value.latency}ms`
+  }
+
+  return isPinging.value ? 'Checking…' : 'Pending'
+})
+
+const pingDescription = computed(() => {
+  if (pingError.value) {
+    return `主进程 ping 失败：${pingError.value}`
+  }
+
+  return '用于验证 renderer、preload、main 三层链路在当前桌面壳层中的交互稳定性。'
+})
+
+const runtimeStatus = computed(() => {
+  if (runtimeError.value) {
+    return `Unavailable · ${runtimeError.value}`
+  }
+
+  return isRefreshing.value ? 'Refreshing' : 'Ready'
+})
 
 function handleDocs(url: string) {
   void openExternal(url)
@@ -221,12 +261,8 @@ function handleRefresh() {
             <div class="grid gap-3">
               <div class="rounded-[28px] border border-border/60 bg-background/80 p-5">
                 <p class="text-sm uppercase tracking-[0.18em] text-muted-foreground">Latest ping</p>
-                <p class="mt-3 text-3xl font-semibold">
-                  {{ ping ? `${ping.message} · ${ping.latency}ms` : 'Pending' }}
-                </p>
-                <p class="mt-2 text-sm text-muted-foreground">
-                  用于验证 renderer、preload、main 三层链路在当前桌面壳层中的交互稳定性。
-                </p>
+                <p class="mt-3 text-3xl font-semibold">{{ pingSummary }}</p>
+                <p class="mt-2 text-sm text-muted-foreground">{{ pingDescription }}</p>
               </div>
 
               <div class="grid gap-3 sm:grid-cols-2">
@@ -261,6 +297,13 @@ function handleRefresh() {
                   >
                     <span class="text-muted-foreground">{{ label }}</span>
                     <span class="max-w-[14rem] truncate text-right font-medium">{{ value }}</span>
+                  </div>
+
+                  <div
+                    class="flex items-center justify-between rounded-2xl border border-border/60 px-4 py-3 text-sm"
+                  >
+                    <span class="text-muted-foreground">Status</span>
+                    <span class="max-w-[14rem] truncate text-right font-medium">{{ runtimeStatus }}</span>
                   </div>
                 </div>
               </div>
