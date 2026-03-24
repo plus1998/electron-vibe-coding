@@ -26,6 +26,7 @@
 - `renderer` 直接使用 Vite 8 dev server 与构建输出，开发反馈更快。
 - `main` 与 `preload` 保持在统一的 Vite 驱动工作流中，工程结构更清晰。
 - 默认启用 `contextIsolation`，通过 preload 暴露白名单 API，适合商业产品的安全基线。
+- renderer 的 CSP 会按环境注入：开发态允许 Vite dev server 连接，生产态默认收紧为本地资源与显式白名单。
 - 使用 Tailwind v4 的 CSS-first 方案与 shadcn-vue 组件风格，兼顾表达力与扩展性。
 - ESLint flat config + TypeScript 类型校验，适合 AI 编程场景下的强规范协作。
 

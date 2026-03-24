@@ -29,6 +29,32 @@ function createBuildSignalPlugin(name, onBundleClose) {
   }
 }
 
+function createContentSecurityPolicy(mode) {
+  const connectSources =
+    mode === 'development' ? ["'self'", 'http://127.0.0.1:5173', 'ws://127.0.0.1:5173'] : ["'self'"]
+
+  return [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self' data:",
+    `connect-src ${connectSources.join(' ')}`,
+  ].join('; ')
+}
+
+function createCspMetaPlugin(mode) {
+  return {
+    name: 'renderer-csp-meta',
+    transformIndexHtml(html) {
+      return html.replace(
+        '<meta name="app-csp" />',
+        `<meta http-equiv="Content-Security-Policy" content="${createContentSecurityPolicy(mode)}" />`,
+      )
+    },
+  }
+}
+
 const externalModules = [
   'electron',
   ...builtinModules,
@@ -80,7 +106,7 @@ export function createRendererConfig({ mode = 'development' } = {}) {
     ...sharedConfig(mode),
     base: mode === 'production' ? './' : '/',
     publicDir: path.resolve(rootDir, 'public'),
-    plugins: [vue(), tailwindcss()],
+    plugins: [vue(), tailwindcss(), createCspMetaPlugin(mode)],
     define: {
       __APP_META__: JSON.stringify(appMeta),
     },
